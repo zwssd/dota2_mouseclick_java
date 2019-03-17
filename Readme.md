@@ -1,9 +1,10 @@
-# About
-Simplified JNA is a library that allows for the quick creation of mouse and keyboard hooks in a multithreaded environment. Additionally it provides easy to use methods for sending inputs to window, mouse, and keyboard objects. 
+# 关于、
 
-# Usage
+Simplified JNA是一个库，允许在多线程环境中快速创建鼠标和键盘挂钩。此外，它还提供了向窗口、鼠标和键盘对象发送输入的简便方法。
 
-You can import this with maven via JitPack:
+# 使用
+
+可以倒入 maven via JitPack:
 
 Add the repo to your pom:
 ```
@@ -23,13 +24,15 @@ And add the dependency:
 	</dependency>
 ```
 
-#### Examples
+#### 使用案例
 
-In these samples, returing `false` allows the event to be parsed by the system. Chaning the return value to `true` will cancel the event.
+在这些示例中，returing“false”允许系统分析事件。将返回值更改为“true”将取消事件。
 
 > Keyboard Hook
 ```java
-KeyEventReceiver keyHook = new KeyEventReceiver() {
+public static void main(String[] args){
+		KeyHookManager keyHook = new KeyHookManager();
+KeyEventReceiver ker = new KeyEventReceiver(keyHook) {
     @Override
     public boolean onKeyUpdate(SystemState sysState, PressState pressState, int time, int vkCode) {
         System.out.println("Is pressed:" + (pressState == PressState.DOWN));
@@ -39,22 +42,26 @@ KeyEventReceiver keyHook = new KeyEventReceiver() {
         return false;
     }
 };
-KeyHook.hook(keyHook);
+KeyHook.hook(ker);
+}
 ```
 > Mouse Hook
 ```java
-MouseEventReceiver mer = new MouseEventReceiver() {
-    @Override
-    public boolean  boolean onMousePress(MouseButtonType type, HWND hwnd, POINT info) {
-        boolean isLeft = type == MouseButtonType.LEFT_DOWN;
-        if (isLeft) {
-            System.out.println("Left mouse button has been pressed!")
-        }
-        return false;
-    }
-    @Override public boolean onMouseRelease(MouseButtonType type, HWND hwnd, POINT info) { return false; }
-    @Override public boolean onMouseScroll(boolean down, HWND hwnd, POINT info) { return false;  }
-    @Override public boolean boolean onMouseMove(HWND hwnd, POINT info) { return false; }
-};
-MouseHook.hook(mer);
+public static void main(String[] args){
+		MouseHookManager mouseHook = new MouseHookManager();
+		MouseEventReceiver mer = new MouseEventReceiver(mouseHook) {
+			@Override
+			public boolean onMousePress(MouseButtonType type, WinDef.HWND hwnd, WinDef.POINT info) {
+				boolean isLeft = type == MouseButtonType.LEFT_DOWN;
+				if (isLeft) {
+					System.out.println("Left mouse button has been pressed!");
+				}
+				return false;
+			}
+			@Override public boolean onMouseRelease(MouseButtonType type, WinDef.HWND hwnd, WinDef.POINT info) { return false; }
+			@Override public boolean onMouseScroll(boolean down, WinDef.HWND hwnd, WinDef.POINT info) { return false;  }
+			@Override public boolean onMouseMove(WinDef.HWND hwnd, WinDef.POINT info) { return false; }
+		};
+		mouseHook.hook(mer);
+	}
 ```
