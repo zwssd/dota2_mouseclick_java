@@ -31,6 +31,9 @@ public class Idle {
 	};
 
 	public static void main(String[] args){
+		Mouse ms = new Mouse();
+		ms.mouseMove(100,0);
+
 		MouseHookManager mouseHook = new MouseHookManager();
 		MouseEventReceiver mer = new MouseEventReceiver(mouseHook) {
 			@Override
@@ -43,7 +46,12 @@ public class Idle {
 			}
 			@Override public boolean onMouseRelease(MouseButtonType type, WinDef.HWND hwnd, WinDef.POINT info) { return false; }
 			@Override public boolean onMouseScroll(boolean down, WinDef.HWND hwnd, WinDef.POINT info) { return false;  }
-			@Override public boolean onMouseMove(WinDef.HWND hwnd, WinDef.POINT info) { return false; }
+			@Override
+			public boolean onMouseMove(WinDef.HWND hwnd, WinDef.POINT info) {
+				int mouseX = info.x;
+				System.out.println("onMouseMove to:"+mouseX);
+				return false;
+			}
 		};
 		mouseHook.hook(mer);
 	}
