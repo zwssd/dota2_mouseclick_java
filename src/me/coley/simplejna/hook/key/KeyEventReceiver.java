@@ -25,8 +25,11 @@ public abstract class KeyEventReceiver extends DeviceEventReceiver<KeyHookManage
 
 	@Override
 	public LRESULT callback(int nCode, WPARAM wParam, KBDLLHOOKSTRUCT info) {
+		boolean cancel = false;
 		int code = wParam.intValue();
-		boolean cancel = onKeyUpdate(SystemState.from(code), PressState.from(code), info.time, info.vkCode);
+		if(code==WM_KEYUP){
+			cancel = onKeyUpdate(SystemState.from(code), PressState.from(code), info.time, info.vkCode);
+		}
 		if (cancel) {
 			return new LRESULT(1);
 		}
