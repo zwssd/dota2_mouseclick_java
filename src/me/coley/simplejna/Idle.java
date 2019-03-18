@@ -137,8 +137,9 @@ class MyThread extends Thread {
                 System.out.println("i has interputed");
                 break;
             }
+            num++;
             System.out.println(num);
-            ms.movemouseTo(width / 2, height / 2);
+            ms.movemouseTo(947, 509);
             ms.mouseLeftClick(0, 0);
             try {
                 Thread.sleep(2000);
