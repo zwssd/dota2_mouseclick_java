@@ -44,6 +44,11 @@ public class Idle {
 		Mouse ms = new Mouse();
 		ms.movemouseTo(width/2,height/2);
 		ms.mouseLeftClick(0,0);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		MouseHookManager mouseHook = new MouseHookManager();
 		MouseEventReceiver mer = new MouseEventReceiver(mouseHook) {
