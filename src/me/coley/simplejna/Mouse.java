@@ -93,4 +93,13 @@ public class Mouse {
 		input.input.mi.dwFlags = new DWORD(flags);
 		User32.INSTANCE.SendInput(new DWORD(1), new INPUT[] { input }, input.size());
 	}
+
+	/**
+	 *	move mouse to x,y
+	 **/
+	public static void movemouseTo(int x,int y){
+		long lx = (int)x;
+		long ly = (int)y;
+		User32.INSTANCE.SetCursorPos(lx,ly);
+	}
 }

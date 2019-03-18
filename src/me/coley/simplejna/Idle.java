@@ -1,11 +1,14 @@
 package me.coley.simplejna;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import me.coley.simplejna.hook.mouse.MouseEventReceiver;
 import me.coley.simplejna.hook.mouse.MouseHookManager;
 import me.coley.simplejna.hook.mouse.struct.MouseButtonType;
+
+import java.awt.*;
 
 /**
  * Utility for retrieving the idle time on Windows.
@@ -31,8 +34,16 @@ public class Idle {
 	};
 
 	public static void main(String[] args){
+
+		//获得屏幕高宽
+		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int)screensize.getWidth();
+		int height = (int)screensize.getHeight();
+
+		//移动到冒个位置后左键单击
 		Mouse ms = new Mouse();
-		ms.mouseMove(100,0);
+		ms.movemouseTo(width/2,height/2);
+		ms.mouseLeftClick(0,0);
 
 		MouseHookManager mouseHook = new MouseHookManager();
 		MouseEventReceiver mer = new MouseEventReceiver(mouseHook) {
@@ -41,6 +52,10 @@ public class Idle {
 				boolean isLeft = type == MouseButtonType.LEFT_DOWN;
 				if (isLeft) {
 					System.out.println("Left mouse button has been pressed!");
+					int mouseX = info.x;
+					System.out.println("Left mouse button X to:"+mouseX);
+					int mouseY = info.y;
+					System.out.println("Left mouse button Y to:"+mouseY);
 				}
 				return false;
 			}
@@ -48,8 +63,6 @@ public class Idle {
 			@Override public boolean onMouseScroll(boolean down, WinDef.HWND hwnd, WinDef.POINT info) { return false;  }
 			@Override
 			public boolean onMouseMove(WinDef.HWND hwnd, WinDef.POINT info) {
-				int mouseX = info.x;
-				System.out.println("onMouseMove to:"+mouseX);
 				return false;
 			}
 		};
