@@ -12,6 +12,8 @@ import me.coley.simplejna.hook.mouse.struct.MouseButtonType;
 
 import java.awt.*;
 
+import static java.lang.Thread.State.TERMINATED;
+
 /**
  * Utility for retrieving the idle time on Windows.
  *
@@ -41,84 +43,39 @@ public class Idle {
 
         KeyHookManager keyHook = new KeyHookManager();
         KeyEventReceiver ker = new KeyEventReceiver(keyHook) {
+
             //创建一个新的线程myThread此线程进入新建状态
-            Thread myThread = new MyThread();
+            //Thread myThread = new MyThread();
+            MyThread myThread = new MyThread();
+            Thread thread = new Thread(myThread);
+
             @Override
             public boolean onKeyUpdate(SystemState sysState, PressState pressState, int time, int vkCode) {
                 /*System.out.println("Is pressed:" + (pressState == PressState.DOWN));
                 System.out.println("Alt down:" + (sysState == KeyEventReceiver.SystemState.SYSTEM));
-                System.out.println("Timestamp:" + time);
-                System.out.println("KeyCode:" + vkCode);*/
-                System.out.println("KeyCodea:" + vkCode);
+                System.out.println("Timestamp:" + time);*/
+                System.out.println("KeyCode:" + vkCode);
                 if (vkCode == 121) {
-                    myThread.start();
+                    if(thread.getState()==TERMINATED){
+                        System.out.println("thread.getState():" + thread.getState());
+                        thread = new Thread(myThread);
+                        thread.start();
+                    }else{
+                        thread.start();
+                    }
                 } else if (vkCode == 123) {
                     //System.out.println("F12 click:" + vkCode);
-                    myThread.interrupt();
+                    thread.interrupt();
                 }
                 return false;
             }
         };
         keyHook.hook(ker);
-
-        MouseHookManager mouseHook = new MouseHookManager();
-        MouseEventReceiver mer = new MouseEventReceiver(mouseHook) {
-            @Override
-            public boolean onMousePress(MouseButtonType type, WinDef.HWND hwnd, WinDef.POINT info) {
-                boolean isLeft = type == MouseButtonType.LEFT_DOWN;
-                if (isLeft) {
-					/*System.out.println("Left mouse button has been pressed!");
-					int mouseX = info.x;
-					System.out.println("Left mouse button X to:"+mouseX);
-					int mouseY = info.y;
-					System.out.println("Left mouse button Y to:"+mouseY);*/
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onMouseRelease(MouseButtonType type, WinDef.HWND hwnd, WinDef.POINT info) {
-                return false;
-            }
-
-            @Override
-            public boolean onMouseScroll(boolean down, WinDef.HWND hwnd, WinDef.POINT info) {
-                return false;
-            }
-
-            @Override
-            public boolean onMouseMove(WinDef.HWND hwnd, WinDef.POINT info) {
-                return false;
-            }
-        };
-        mouseHook.hook(mer);
     }
 
-    //@formatter:off
-	/*
-	public static void main(String[] args) {
-		if (!System.getProperty("os.name").contains("Windows")) {
-			System.err.println("ERROR: Only implemented on Windows");
-			System.exit(1);
-		}
-		State state = State.UNKNOWN;
-		DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-		for (;;) {
-			int idleSec = dxInputEventTime() / 1000;
-			State newState = idleSec < 30 ? State.ONLINE : idleSec > 5 * 60 ? State.AWAY : State.IDLE;
-			if (newState != state) {
-				state = newState;
-				System.out.println(dateFormat.format(new Date()) + " # " + state);
-			}
-			try {
-				Thread.sleep(100);
-			} catch (Exception ex) {}
-		}
-	}
-	*/
 }
 
-class MyThread extends Thread {
+class MyThread implements Runnable {
 
     int num = 0;
 
