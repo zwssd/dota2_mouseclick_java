@@ -96,7 +96,8 @@ class MyThread implements Runnable {
             }
             num++;
             System.out.println(num);
-            ms.movemouseTo(947, 509);
+            //ms.movemouseTo(947, 509);
+            ms.movemouseTo(width/2, height/2-30);
             ms.mouseLeftClick(0, 0);
             try {
                 Thread.sleep(2000);
