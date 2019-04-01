@@ -37,8 +37,6 @@ public class Idle {
         UNKNOWN, ONLINE, IDLE, AWAY
     }
 
-    ;
-
     public static void main(String[] args) {
 
         KeyHookManager keyHook = new KeyHookManager();
