@@ -93,10 +93,10 @@ class MyThread implements Runnable {
                 break;
             }
             num++;
-            System.out.println("The width and the height of the screen are " + screensize.getWidth() + " x " + screensize.getHeight());
+            //System.out.println("The width and the height of the screen are " + screensize.getWidth() + " x " + screensize.getHeight());
             System.out.println(num);
-            System.out.println(width);
-            System.out.println(height);
+            //System.out.println(width);
+            //System.out.println(height);
 
             ms.movemouseTo(947, 509);
             //ms.movemouseTo(width/2, height/2-30);
